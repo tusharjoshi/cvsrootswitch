@@ -6,7 +6,7 @@ package com.infospectrum.scm.tools.cvs;
 
 /**
  *
- * @author tusharj
+ * @author <a href="tusharvjoshi@gmail.com">Tushar Joshi</a>
  */
 public class RootChangerShell {
 
