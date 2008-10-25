@@ -18,22 +18,22 @@ public class RootChangerTest {
 
 	@Test
 	public void testChangeRootFor() {
-		File cvsFolderPath = createTestCVSFolder();
+		//File cvsFolderPath = createTestCVSFolder();
 
-		RootChanger.changeRootFile(cvsFolderPath, "server", "myserver2", null);
+		//RootChanger.changeRootFile(cvsFolderPath, "server", "myserver2", null);
 	}
 
 	@Test
 	public void testChangeRoot() {
-//		RootChanger rootChanger = new RootChanger("D:\\testcvs\\admin",
-//				"10.150.133.206", "216.105.106.75");
-//		rootChanger.changeRoots(new RootChangeAdapter() {
-//
-//			@Override
-//			public void rootChanged(String rootFileName) {
-//				System.out.println(rootFileName);
-//			}
-//		});
+		RootChanger rootChanger = new RootChanger("D:\\hypertech\\workspace\\ipm",
+				"10.150.133.206", "216.105.106.75");
+		rootChanger.changeRoots(new RootChangeAdapter() {
+
+			@Override
+			public void rootChanged(String rootFileName) {
+				System.out.println(rootFileName);
+			}
+		});
 	}
 
 	private File createTestCVSFolder() {
