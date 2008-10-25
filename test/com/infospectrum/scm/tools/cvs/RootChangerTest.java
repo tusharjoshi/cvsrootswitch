@@ -16,68 +16,70 @@ import org.junit.Test;
  */
 public class RootChangerTest {
 
-	@Test
-	public void testChangeRootFor() {
-		//File cvsFolderPath = createTestCVSFolder();
+    @Test
+    public void testChangeRootFor() {
+        File cvsFolderPath = createTestCVSFolder();
 
-		//RootChanger.changeRootFile(cvsFolderPath, "server", "myserver2", null);
-	}
+        RootChangeListener listener = new RootChangeAdapter() {
 
-	@Test
-	public void testChangeRoot() {
-		RootChanger rootChanger = new RootChanger("D:\\hypertech\\workspace\\ipm",
-				"10.150.133.206", "216.105.106.75");
-		rootChanger.changeRoots(new RootChangeAdapter() {
+            @Override
+            public void rootChanged(String rootFileName) {
+                System.out.println(rootFileName);
+            }
+        };
+        RootChanger.changeRootFile(cvsFolderPath, "server", "myserver2", listener);
+    }
 
-			@Override
-			public void rootChanged(String rootFileName) {
-				System.out.println(rootFileName);
-			}
-		});
-	}
+    private File createTestCVSFolder() {
+        File cvsFolderPath = new File("CVS");
+        if (!cvsFolderPath.exists()) {
+            cvsFolderPath.mkdir();
+        }
 
-	private File createTestCVSFolder() {
-		File cvsFolderPath = new File("CVS");
-		if (!cvsFolderPath.exists()) {
-			cvsFolderPath.mkdir();
-		}
+        File rootFile = new File("CVS" + File.separator + "Root");
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
 
-		File rootFile = new File("CVS" + File.separator + "Root");
-		FileWriter fileWriter = null;
-		BufferedWriter bufferedWriter = null;
+        try {
+            fileWriter = new FileWriter(rootFile);
+            bufferedWriter = new BufferedWriter(fileWriter);
 
-		try {
-			fileWriter = new FileWriter(rootFile);
-			bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(":extssh:username@server:/cvs");
+            bufferedWriter.write("\n");
 
-			bufferedWriter.write(":extssh:username@server:/cvs");
-			bufferedWriter.write("\n");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
+            if (bufferedWriter != null) {
+                try {
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
 
-			if (bufferedWriter != null) {
-				try {
-					bufferedWriter.flush();
-					bufferedWriter.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
 
-			if (fileWriter != null) {
-				try {
-					fileWriter.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+        return cvsFolderPath;
+    }
 
-		return cvsFolderPath;
-	}
+    @Test
+    public void testGetFirstRootText() {
+        File cvsFolderPath = createTestCVSFolder();
+        String path = RootChanger.getFirstRootText("..");
+        System.out.println("CVSROOTPATH:" + path);
+    }
+
 }

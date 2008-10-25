@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Maintains the initial folder name and relevant data to change the
@@ -160,5 +162,83 @@ public class RootChanger {
             }
         }
 
+    }
+
+    public static String getFirstRootText(String path) {
+        String rootText = "";
+        File pathFile = new File(path);
+        File firstCVSFolderFile = getFirstCVSRootFolder(pathFile);
+        
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
+        String rootFileName;
+
+        try {
+
+            rootFileName =
+                    firstCVSFolderFile.getCanonicalPath() + File.separator + "Root";
+
+            // change the root
+            fileReader = new FileReader(rootFileName);
+            bufferedReader = new BufferedReader(fileReader);
+
+            rootText = bufferedReader.readLine();
+            
+            bufferedReader.close();
+            bufferedReader = null;
+            fileReader.close();
+            fileReader = null;
+
+        } catch (Exception e) {
+            
+        } finally {
+
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            if (fileReader != null) {
+                try {
+                    fileReader.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        return rootText;
+    }
+
+    private static File getFirstCVSRootFolder(File currentPathFile) {
+        if (currentPathFile.isFile()) {
+            // not a directory so return
+            return null;
+        }
+
+        // process this directory first
+        if (currentPathFile.getName().equals("CVS")) {
+            return currentPathFile;
+
+        } else {
+
+            // iterate on the sub directories
+            File[] listFiles = currentPathFile.listFiles();
+            for (File subItem : listFiles) {
+                // recursive call 
+                File rootFolder = getFirstCVSRootFolder(subItem);
+                if (rootFolder != null) {
+                    return rootFolder;
+                }
+            }
+        }
+
+        return null;
     }
 }
