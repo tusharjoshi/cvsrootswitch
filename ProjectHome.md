@@ -1,0 +1,1 @@
+This tool changes the root entry of the local module checked out of CVS.  If CVS modules checked out from one server are required to be shifted to some other server then the root entry of the CVS folders need to be replaces recursively.  This tool searches for CVS Root files and replaces old root entries with the given new root entries.
